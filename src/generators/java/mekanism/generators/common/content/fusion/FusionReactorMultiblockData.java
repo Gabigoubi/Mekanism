@@ -230,6 +230,7 @@ public class FusionReactorMultiblockData extends MultiblockData {
                 injectFuel();
                 fuelBurned = burnFuel();
                 if (fuelBurned == 0) {
+                    System.out.println("DEBUG_MEK: O Reator desligou a ignição na inicialização!");
                     setBurning(false);
                 }
             }
