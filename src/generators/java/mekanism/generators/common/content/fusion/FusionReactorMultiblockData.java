@@ -182,6 +182,10 @@ public class FusionReactorMultiblockData extends MultiblockData {
     public void readUpdateTag(CompoundTag tag, HolderLookup.Provider provider) {
         super.readUpdateTag(tag, provider);
         NBTUtils.setDoubleIfPresent(tag, SerializationConstants.PLASMA_TEMP, this::setLastPlasmaTemp);
+      // DEBUG TEST HERE
+        if (tag.contains(SerializationConstants.BURNING)) {
+        System.out.println("DEBUG_MEK: Loading State from NBT | Burning: " + tag.getBoolean(SerializationConstants.BURNING));
+        }
         NBTUtils.setBooleanIfPresent(tag, SerializationConstants.BURNING, this::setBurning);
     }
 
@@ -230,15 +234,24 @@ public class FusionReactorMultiblockData extends MultiblockData {
                 injectFuel();
                 fuelBurned = burnFuel();
                 if (fuelBurned == 0) {
-                    System.out.println("DEBUG_MEK: O Reator desligou a ignição na inicialização!");
+        
                     setBurning(false);
                 }
             }
         } else {
+
+            // DEBUG TEST HERE
+
+            if (isBurning()) {
+            System.out.println("DEBUG_MEK: Auto-shutdown triggered by temperature! Current Temp: " + getPlasmaTemp());
+            }
+            
             setBurning(false);
         }
 
         if (lastBurned != fuelBurned) {
+            
+            
             lastBurned = fuelBurned;
         }
 
@@ -435,6 +448,9 @@ public class FusionReactorMultiblockData extends MultiblockData {
 
     public void setBurning(boolean burn) {
         if (burning != burn) {
+// DEBUG TEST HERE
+            System.out.println("DEBUG_MEK: FusionReactor State Change | Burning: " + burn + " | Caller: " + Thread.currentThread().getStackTrace()[2].getMethodName());
+            
             burning = burn;
             markDirty();
         }
